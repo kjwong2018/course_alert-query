@@ -1,6 +1,11 @@
 # course_alert-query
 A telegram bot that get you the class info you need and can set alert to check for open seats
 
+<div>
+<img src="/test.png" width="250" height ="450" hspace="20"><img src="/test1.png" width="250" height ="450" hspace="20"><img src="/test2.png" width="250" height ="450">
+</div>
+Left image was testing the alert system of telegram, Middle shows adding to alert system, Right shows course querying.
+
 ### Capability
 * Currently it can only support around 1 - 5 people due to elements I did not implements.
 * It can search up any major courses, such as CSE, MGO, EAS, PHY and more.
