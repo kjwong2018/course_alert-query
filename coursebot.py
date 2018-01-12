@@ -6,6 +6,8 @@ signUp = "https://myub.buffalo.edu/"
 help_msg = "Here are some valid commands:\n" + "/cid\n(shows your chat id)\n" + "/cse101\n(shows CSE101 course info)"
 commands =['help','cid','alert']
 
+# Function that takes in a course such as CSE341 splits and replace base URL to generate a URL to request data from.
+# After getting data (json), decode and get necessary information to build a valid response to return to caller.
 def courseInfo(course):
     n ='\n'
     dept = course[0:3]
@@ -32,6 +34,8 @@ def courseInfo(course):
         else:
             return ("Sorry something went wrong, please try again")
 
+# alertSystem adds courses that needs alert into a database to let checking keep track of how many courses need to be check
+# alertSystem was also meant to do alertChecking but due to rapid coding and testing I forgot to replace them. Update soon but still works fine
 def alertSystem(task,value):
     configData = config('db')
     retValue = {}
@@ -43,7 +47,7 @@ def alertSystem(task,value):
             cur.execute("INSERT INTO Course VALUES(%s,%s)",(splitValue[1],splitValue[0]))
             con.commit()
         else:
-            retValue["hi"] = "bye"
+            retValue["hi"] = "bye"              # This part of alertSystem was meant to do alertCheck() will update soon.
     except psycopg2.Error as e:
         if con:
             con.rollback()
@@ -56,6 +60,8 @@ def alertSystem(task,value):
             con.close()
         return retValue
 
+# alertCheck gets all the course from database that needs alert and call courseInfo.
+# If seats are available, alert user that requested the alert.
 def alertCheck():
     configData = config('db')
     queryTable = {}
@@ -84,6 +90,7 @@ def alertCheck():
                 bot.sendMessage(queryTable[key], alertMessage)
             time.sleep(30)
 
+# Function that handles all incoming message from Telgram and determine if message is a valid request from a valid user and act accordingly.
 def requestHandler(request):
     message = request['text']
     chat_id = request['chat']['id']
@@ -141,6 +148,7 @@ def requestHandler(request):
         else:
             bot.sendMessage(chat_id, "Invalid command!")
 
+# Check if reuqest is from a valid user by checking the valid user database
 def checkID(chat_id):
     configData = config('db')
     validation = False
@@ -158,6 +166,7 @@ def checkID(chat_id):
             con.close()
         return validation
 
+# Configuration function that gets necessary information from config.ini
 def config(section):
     parser = ConfigParser()
     parser.read('config.ini')
@@ -171,6 +180,7 @@ def config(section):
     finally:
         return data
 
+# initialSetup function does all the initialSetup such as creating necessary database table if not exist. It also sets up Telegram token for request.
 def initialSetup():
     configData = config('initial')
     try:
